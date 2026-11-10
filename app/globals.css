@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #0d0d16;
+  --color-text: #e2dfea;
+  --color-main: #6c3cd2;
+  --color-main-light: #5e56a8;
+  --color-gray: #b7b5db;
+  --color-border: #1e1e2a;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-text: var(--color-text);
+  --color-main: var(--color-main);
+  --color-main-light: var(--color-main-light);
+  --color-gray: var(--color-gray);
+  --color-border: var(--color-border);
+}
+
+@media (prefers-color-scheme: dark) {
+}
+
+body {
+  @apply bg-bg text-text;
+}
+
+.container {
+  @apply max-w-360 mx-auto px-4;
+}
+
+.rdp-today button {
+  @apply text-main;
+}
+
+.rdp-chevron {
+  @apply fill-main!;
+}
+
+.rdp-months,
+.rdp-month,
+table {
+  @apply max-w-full! w-full!;
+}
+
+.rdp-selected button {
+  @apply bg-main border-main!;
+}
+.rdp-day.rdp-today.rdp-selected button {
+  @apply text-white!;
+}
