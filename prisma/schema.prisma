@@ -7,6 +7,47 @@ datasource db {
   provider  = "postgresql"
 }
 
-model Test {
-  id String @unique @default(uuid())
+model Training {
+  id String @id  @default(uuid())
+  muscleGroup MuscleGroups[]
+  
+  exercises Exercise[] 
+  time Int?
+  createdAt DateTime @default(now())
+}
+
+model Exercise {
+  id String @id  @default(uuid())
+  image String?
+  name String
+  sets Set[]
+  muscleGroup MuscleGroups
+  note String?
+  isIncrease Boolean @default(false)
+  trainings Training[] 
+
+  createdAt DateTime @default(now())
+}
+
+model Set {
+  id String @id  @default(uuid())
+  kg Int
+  reps Int
+
+  exercise Exercise @relation(references: [id], fields: [exerciseId] )
+  exerciseId String
+  isBest Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+
+
+
+enum MuscleGroups {
+  BREAST
+  BACK
+  LEGS
+  TRICEPS
+  BICEPS
 }

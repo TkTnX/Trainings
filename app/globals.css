@@ -47,5 +47,5 @@ table {
   @apply bg-main border-main!;
 }
 .rdp-day.rdp-today.rdp-selected button {
-  @apply text-white!;
+  @apply text-white! outline-1;
 }
