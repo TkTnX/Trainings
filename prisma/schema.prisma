@@ -12,7 +12,7 @@ model Training {
   muscleGroup MuscleGroups[]
   
   exercises Exercise[] 
-  time Int?
+  sets Set[]
   createdAt DateTime @default(now())
 }
 
@@ -22,8 +22,6 @@ model Exercise {
   name String
   sets Set[]
   muscleGroup MuscleGroups
-  note String?
-  isIncrease Boolean @default(false)
   trainings Training[] 
 
   createdAt DateTime @default(now())
@@ -33,9 +31,14 @@ model Set {
   id String @id  @default(uuid())
   kg Int
   reps Int
+  note String?
+  isIncrease Boolean @default(false)
+  rest String?
 
   exercise Exercise @relation(references: [id], fields: [exerciseId] )
   exerciseId String
+  training Training? @relation(references: [id],fields: [trainingId])
+  trainingId String
   isBest Boolean @default(false)
 
   createdAt DateTime @default(now())
@@ -45,7 +48,7 @@ model Set {
 
 
 enum MuscleGroups {
-  BREAST
+  BREAST 
   BACK
   LEGS
   TRICEPS

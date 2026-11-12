@@ -3,6 +3,7 @@
 import { MuscleGroups } from "@/app/generated/prisma/enums";
 import { updateTraining } from "@/shared/api";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export const ChooseMuscleGroups = ({ id }: Props) => {
+  const router = useRouter()
   const [selected, setSelected] = useState<MuscleGroups[]>([]);
 
   const onClick = (group: MuscleGroups) => {
@@ -24,6 +26,7 @@ export const ChooseMuscleGroups = ({ id }: Props) => {
     await updateTraining(id, {
       muscleGroup: selected,
     });
+    router.push(`/training?id=${id}&step=2`)
   };
 
   return (
@@ -97,3 +100,7 @@ export const ChooseMuscleGroups = ({ id }: Props) => {
     </div>
   );
 };
+
+// TODO: После нажатия кнопки далее выводить следующий экран со списком упражнений,
+// TODO: по дефолту выбраны те упражнения, которые я делаю обычно, в низу должна быть кнопка "начать тренировку",
+// TODO: после нажатия кнопки открывается экран на котором у меня по порядку тренировки, их можно раскрыть, добавлять подход, указывать отдых, веса и повторения, заметки

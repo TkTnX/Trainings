@@ -1,5 +1,6 @@
 "use client";
 
+import { Set } from "@/app/generated/prisma/client";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +14,7 @@ import {
 import { Line } from "react-chartjs-2";
 
 interface Props {
-  id: string;
+  sets: Set[];
 }
 
 ChartJS.register(
@@ -26,20 +27,23 @@ ChartJS.register(
   Legend,
 );
 
-export const ProgressLine = ({ id }: Props) => {
+export const ProgressLine = ({ sets }: Props) => {
+  console.log(sets);
   const data = {
-    labels: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн"],
+    labels: sets.map((set) =>
+      new Date(set.createdAt).toLocaleDateString("ru-RU"),
+    ),
     datasets: [
       {
         label: "Веса",
-        data: [40, 80, 120, 110],
+        data: sets.map((set) => set.kg),
         borderColor: "#6c3cd2",
         backgroundColor: "#6c3cd2",
         tension: 0.4,
       },
       {
         label: "Повторения",
-        data: [8, 8, 10, 8],
+        data: sets.map((set) => set.reps),
         borderColor: "red",
         backgroundColor: "red",
         tension: 0.4,

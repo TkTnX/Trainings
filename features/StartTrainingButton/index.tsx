@@ -6,7 +6,7 @@ export const StartTrainingButton = () => {
   const router = useRouter();
   const onClick = async () => {
     const createdTraining = await createTraining();
-    router.push(`/training?id=${createdTraining.id}`);
+    router.push(`/training?id=${createdTraining.id}&step=1`);
   };
 
   return (

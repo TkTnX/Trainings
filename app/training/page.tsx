@@ -1,16 +1,21 @@
-import { ChooseMuscleGroups } from "@/widgets";
+import { ChooseExercises, ChooseMuscleGroups, Training } from "@/widgets";
 
 export const instant = false;
 const CreateTrainingPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ id: string }>;
+  searchParams: Promise<{ id: string; step: string }>;
 }) => {
-  const { id } = await searchParams;
-  console.log(id);
+  const { id, step } = await searchParams;
   return (
     <section className="container">
-      <ChooseMuscleGroups id={id} />
+      {step === "1" ? (
+        <ChooseMuscleGroups id={id} />
+      ) : step === "2" ? (
+        <ChooseExercises id={id} />
+      ) : (
+        <Training id={id} />
+      )}
     </section>
   );
 };
