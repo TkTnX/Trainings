@@ -10,6 +10,9 @@ export const getTraining = async (id: string) => {
       exercises: {
         include: {
           sets: {
+            where: {
+              trainingId: id,
+            },
             orderBy: {
               createdAt: "asc",
             },
@@ -18,14 +21,37 @@ export const getTraining = async (id: string) => {
       },
     },
   });
+  console.log(training);
   if (!training) throw new Error("Тренировка не найдена!");
   return training;
+};
+
+export const getLastTraining = async () => {
+  const training = await prisma.training.findFirst({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      exercises: { include: { sets: true } },
+    },
+  });
+  return training;
+};
+
+export const getTrainingDays = async () => {
+  const trainings = await prisma.training.findMany({
+    select: {
+      createdAt: true,
+    },
+  });
+  return trainings;
 };
 
 export const createTraining = async () => {
   const newTraining = await prisma.training.create({
     data: {
       muscleGroup: [],
+      time: 0,
     },
   });
 
@@ -51,3 +77,20 @@ export const updateTraining = async (id: string, data: IUpdateTraining) => {
     },
   });
 };
+
+export async function finishTraining(id: string) {
+  const training = await prisma.training.findFirst({
+    where: { id },
+  });
+
+  if (!training) {
+    throw new Error("Тренировка не найдена!");
+  }
+
+  return await prisma.training.update({
+    where: { id },
+    data: {
+      time: new Date(training.createdAt).getMinutes() - new Date().getMinutes(),
+    },
+  });
+}

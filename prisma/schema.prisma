@@ -10,6 +10,7 @@ datasource db {
 model Training {
   id String @id  @default(uuid())
   muscleGroup MuscleGroups[]
+  time Int @default(0)
   
   exercises Exercise[] 
   sets Set[]
