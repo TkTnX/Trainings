@@ -1,17 +1,10 @@
-import { Training } from "@/entities";
-import { Visites } from "@/widgets";
+import { HistoryTrainings, Visites } from "@/widgets";
 
 const HistoryPage = () => {
   return (
     <section className="container flex flex-col gap-8">
       <Visites />
-      <Training />
-      <Training />
-      <Training />
-      <Training />
-      <Training />
-      <Training />
-      <Training />
+      <HistoryTrainings />
     </section>
   );
 };

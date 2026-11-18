@@ -1,13 +1,8 @@
-import { ProgressSection } from "@/widgets";
+import { ProgressList } from "@/widgets";
 
 const ProgressPage = () => {
   return (
-    <>
-      <ProgressSection />
-      <ProgressSection />
-      <ProgressSection />
-      <ProgressSection />
-    </>
+    <ProgressList />
   );
 };
 

@@ -1,5 +1,6 @@
 import { MuscleGroupEnum, TrainingWithExercise } from "@/shared/types";
-import { BicepsFlexed, ChevronRight, Clock, Dumbbell } from "lucide-react";
+import { TrainingInfo } from "@/shared/ui";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 interface Props {
@@ -14,8 +15,11 @@ export const Training = ({ isLastTraining = false, training }: Props) => {
     month: "long",
   });
   return (
-    <div className="border-b border-border pb-8">
-      <Link href={"/training/1"} className="absolute inset-0"></Link>
+    <div className="border-b border-border pb-8 relative">
+      <Link
+        href={`/training/${training.id}`}
+        className="absolute inset-0"
+      ></Link>
       <div className="flex items-center justify-between">
         <div>
           <h3 className="font-semibold text-xl">
@@ -29,20 +33,7 @@ export const Training = ({ isLastTraining = false, training }: Props) => {
         </div>
         <ChevronRight className="text-gray" />
       </div>
-      <div className="flex mt-8 gap-1 justify-center">
-        <div className=" flex-col flex items-center gap-2 bg-[#1e1e2a] flex-1  rounded-lg py-5 px-1">
-          <Clock className="text-gray" />
-          <p className="font-semibold">{training.time} мин</p>
-        </div>
-        <div className=" flex-col  flex items-center gap-2 bg-[#1e1e2a]  rounded-lg py-5 px-2">
-          <Dumbbell className="text-main" />
-          <p className="font-semibold">{training.exercises.length} упражнений</p>
-        </div>
-        <div className=" flex-col flex items-center gap-2 bg-[#1e1e2a] flex-1  rounded-lg py-5 px-1">
-          <BicepsFlexed className="text-gray" />
-          <p className="font-semibold">{training.exercises.reduce((acc, i) => acc + i.sets.length, 0)} подходов</p>
-        </div>
-      </div>
+      <TrainingInfo training={training} />
     </div>
   );
 };

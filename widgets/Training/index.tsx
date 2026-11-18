@@ -115,7 +115,3 @@ export const Training = ({ id }: Props) => {
   );
 };
 
-// TODO: Возможность завершить тренировку
-// TODO: Как-то придумать, как отображать прошлый результат (показывать уменьшенный подход со всей инфой: note, isIncrease, etc.)
-
-// TODO: http://localhost:3000/training?id=d1ba4689-348e-4127-addf-374bc1c58502&step=3

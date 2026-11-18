@@ -26,14 +26,14 @@ export const ChooseExercises = ({ id }: Props) => {
 
   useEffect(() => {
     const getExerciesFunc = async () => {
-      const items = await getExercises();
+      const items = await getExercises(id);
 
       setExercises(items);
       setIsPending(false);
     };
 
     getExerciesFunc();
-  }, []);
+  }, [id]);
   const exercisesSortedByMuscleGroup: {
     [key: string]: ExerciseTypeWithSets[];
   } = {};

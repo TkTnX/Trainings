@@ -3,6 +3,17 @@
 import { prisma } from "@/prisma/prisma.client";
 import { IUpdateTraining } from "@/shared/types";
 
+export const getTrainings = async () => {
+  const trainings = await prisma.training.findMany({
+    include: { exercises: { include: { sets: true } } },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return trainings;
+};
+
 export const getTraining = async (id: string) => {
   const training = await prisma.training.findUnique({
     where: { id },
@@ -21,7 +32,6 @@ export const getTraining = async (id: string) => {
       },
     },
   });
-  console.log(training);
   if (!training) throw new Error("Тренировка не найдена!");
   return training;
 };
