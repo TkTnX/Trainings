@@ -15,4 +15,8 @@ export const PATHS = [
     path: "/training/",
     label: "Тренировка",
   },
+  {
+    path: "/create-exercise",
+    label: "Создание упражнения",
+  },
 ];

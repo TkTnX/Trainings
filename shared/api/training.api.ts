@@ -5,7 +5,7 @@ import { IUpdateTraining } from "@/shared/types";
 
 export const getTrainings = async () => {
   const trainings = await prisma.training.findMany({
-    include: { exercises: { include: { sets: true } } },
+    include: { exercises: { include: { sets: true } }, sets: true },
     orderBy: {
       createdAt: "desc",
     },
@@ -30,6 +30,7 @@ export const getTraining = async (id: string) => {
           },
         },
       },
+      sets: true,
     },
   });
   if (!training) throw new Error("Тренировка не найдена!");
@@ -43,6 +44,7 @@ export const getLastTraining = async () => {
     },
     include: {
       exercises: { include: { sets: true } },
+      sets: true,
     },
   });
   return training;
@@ -97,10 +99,15 @@ export async function finishTraining(id: string) {
     throw new Error("Тренировка не найдена!");
   }
 
+  const startTime = new Date(training.createdAt).getTime();
+  const endTime = Date.now();
+
+  const duration = Math.floor((endTime - startTime) / 1000 / 60);
+
   return await prisma.training.update({
     where: { id },
     data: {
-      time: new Date(training.createdAt).getMinutes() - new Date().getMinutes(),
+      time: duration,
     },
   });
 }

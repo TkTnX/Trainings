@@ -12,4 +12,5 @@ export interface ExerciseWithSets extends Exercise {
 
 export interface TrainingWithExercise extends Training {
   exercises: ExerciseWithSets[];
+  sets: Set[]
 }

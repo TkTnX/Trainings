@@ -42,7 +42,6 @@ export const BigExercise = ({ id }: Props) => {
   const sets = exercise.sets;
   const { maxKg, maxReps } = getRecord(sets);
   const percentage = getWeightDynamics(sets);
-  console.log(percentage);
   return (
     <section className="container">
       <h2 className="font-bold text-4xl">Упражнение</h2>

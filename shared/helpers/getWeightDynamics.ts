@@ -1,7 +1,6 @@
 import { Set } from "@/app/generated/prisma/client";
 
 export function getWeightDynamics(sets: Set[]) {
-  console.log(sets);
   const now = Date.now();
   const day = 24 * 60 * 60 * 1000;
 
@@ -30,6 +29,5 @@ export function getWeightDynamics(sets: Set[]) {
   }
 
   const percentage = ((currMax - prevMax) / prevMax) * 100;
-  console.log(percentage);
   return Number(percentage.toExponential(1));
 }

@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const ChooseMuscleGroups = ({ id }: Props) => {
-  const router = useRouter()
+  const router = useRouter();
   const [selected, setSelected] = useState<MuscleGroups[]>([]);
 
   const onClick = (group: MuscleGroups) => {
@@ -26,7 +26,7 @@ export const ChooseMuscleGroups = ({ id }: Props) => {
     await updateTraining(id, {
       muscleGroup: selected,
     });
-    router.push(`/training?id=${id}&step=2`)
+    router.push(`/training?id=${id}&step=2`);
   };
 
   return (
@@ -37,7 +37,7 @@ export const ChooseMuscleGroups = ({ id }: Props) => {
       >
         <Image
           fill
-          className="brightness-30 rounded-2xl"
+          className="brightness-30 rounded-2xl object-cover"
           src={`/images/muscle-groups/back.jpg`}
           alt="Спина"
         />
@@ -49,11 +49,23 @@ export const ChooseMuscleGroups = ({ id }: Props) => {
       >
         <Image
           fill
-          className="brightness-30 rounded-2xl"
+          className="brightness-30 rounded-2xl object-cover"
           src={`/images/muscle-groups/breast.jpg`}
           alt="Грудь"
         />
         <p className="absolute bottom-4 left-4 font-bold text-4xl">Грудь</p>
+      </button>
+      <button
+        onClick={() => onClick(MuscleGroups.SHOULDERS)}
+        className={`relative w-full h-50 rounded-2xl transition border border-transparent ${selected.includes(MuscleGroups.SHOULDERS) ? " border-green-500! scale-95" : ""}`}
+      >
+        <Image
+          fill
+          className="brightness-30 rounded-2xl object-cover"
+          src={`/images/muscle-groups/shoulders.jpg`}
+          alt="Грудь"
+        />
+        <p className="absolute bottom-4 left-4 font-bold text-4xl">Плечи</p>
       </button>
       <button
         onClick={() => onClick(MuscleGroups.BICEPS)}
@@ -100,4 +112,3 @@ export const ChooseMuscleGroups = ({ id }: Props) => {
     </div>
   );
 };
-

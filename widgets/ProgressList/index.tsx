@@ -46,7 +46,6 @@ export const ProgressList = () => {
     getExercisesFunc();
   }, []);
 
-  console.log(muscleGroups);
 
   return (
     <section>

@@ -18,13 +18,15 @@ export const Exercise = ({ exercise, isChoose = false }: Props) => {
           className="absolute inset-0"
         ></Link>
       )}
-      <Image
-        src={exercise.image || "/images/exercises/stanovaya-tyaga.jpg"}
-        width={140}
-        height={100}
-        className="rounded-xl w-35 h-25 object-cover"
-        alt={exercise.name || "Становая тяга"}
-      />
+      {exercise.image && (
+        <Image
+          src={exercise.image}
+          width={140}
+          height={100}
+          className="rounded-xl w-35 h-25 object-cover"
+          alt={exercise.name || "Становая тяга"}
+        />
+      )}
       <div>
         <h4 className="text-xl">{exercise.name || "Становая тяга"}</h4>
         {exercise.sets.length > 0 && (

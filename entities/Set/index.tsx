@@ -10,7 +10,6 @@ interface Props {
 }
 
 export const Set = ({ set, index, onDeleteSet, isLastResult }: Props) => {
-  console.log(isLastResult);
   return (
     <div className="bg-[#232330] p-4 rounded-2xl relative flex items-center gap-4">
       <p className="bg-main w-10 h-10 flex items-center justify-center rounded-full font-bold">
