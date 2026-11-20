@@ -56,6 +56,7 @@ export const Training = ({ id }: Props) => {
     });
   };
 
+  console.log(training?.exercises)
   return (
     <div className="flex flex-col gap-4">
       {training?.exercises.map(({ exercise }) => (

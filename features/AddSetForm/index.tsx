@@ -39,7 +39,10 @@ export const AddSetForm = ({ exerciseId, training, setTraining }: Props) => {
             item.exercise.id === formData.get("exerciseId")
               ? {
                   ...item,
-                  sets: [...item.exercise.sets, set],
+                  exercise: {
+                    ...item.exercise,
+                    sets: [...item.exercise.sets, set],
+                  },
                 }
               : item,
           ),
