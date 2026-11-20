@@ -42,6 +42,7 @@ export const TrainingExercise = ({ exercise }: Props) => {
                 <ChevronUp size={32} />
               </div>
             )}
+            {set.note && <p className="text-xs text-gray">{set.note}</p>}
           </div>
         ))}
       </div>

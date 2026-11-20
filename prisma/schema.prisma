@@ -12,7 +12,7 @@ model Training {
   muscleGroup MuscleGroups[]
   time Int @default(0)
   
-  exercises Exercise[] 
+  exercises TrainingExercise[] 
   sets Set[]
   createdAt DateTime @default(now())
 }
@@ -23,9 +23,22 @@ model Exercise {
   name String
   sets Set[]
   muscleGroup MuscleGroups
-  trainings Training[] 
+  trainings TrainingExercise[] 
 
   createdAt DateTime @default(now())
+}
+
+model TrainingExercise {
+  trainingId String
+  exerciseId String
+
+  position Int
+
+  training Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@id([trainingId, exerciseId])
+  @@index([trainingId, position])
 }
 
 model Set {

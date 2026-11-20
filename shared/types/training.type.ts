@@ -1,16 +1,24 @@
-import { Exercise, Set, Training } from "@/app/generated/prisma/client";
-import { MuscleGroups } from "@/app/generated/prisma/enums";
+import {
+  Exercise,
+  MuscleGroups,
+  Set,
+  Training,
+  TrainingExercise,
+} from "@/app/generated/prisma/client";
 
 export interface IUpdateTraining {
-    muscleGroup?: MuscleGroups[]
-    exercises?: string[]
+  exercises?: string[];
+  muscleGroup?: MuscleGroups[];
 }
 
 export interface ExerciseWithSets extends Exercise {
   sets: Set[];
 }
 
+export interface TrainingExerciseWithData extends TrainingExercise {
+  exercise: ExerciseWithSets;
+}
+
 export interface TrainingWithExercise extends Training {
-  exercises: ExerciseWithSets[];
-  sets: Set[]
+  exercises: TrainingExerciseWithData[];
 }

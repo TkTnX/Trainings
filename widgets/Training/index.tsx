@@ -27,7 +27,6 @@ export const Training = ({ id }: Props) => {
     getTrainingFunc();
   }, [id]);
 
-
   const onOpen = (id: string) => {
     if (open.includes(id)) {
       setOpen(open.filter((item) => item !== id));
@@ -42,13 +41,16 @@ export const Training = ({ id }: Props) => {
 
       return {
         ...prev,
-        exercises: prev.exercises.map((exercise) =>
-          exercise.id === exerciseId
+        exercises: prev.exercises.map((item) =>
+          item.exercise.id === exerciseId
             ? {
-                ...exercise,
-                sets: exercise.sets.filter((set) => set.id !== setId),
+                ...item,
+                exercise: {
+                  ...item.exercise,
+                  sets: item.exercise.sets.filter((set) => set.id !== setId),
+                },
               }
-            : exercise,
+            : item,
         ),
       };
     });
@@ -56,7 +58,7 @@ export const Training = ({ id }: Props) => {
 
   return (
     <div className="flex flex-col gap-4">
-      {training?.exercises.map((exercise) => (
+      {training?.exercises.map(({ exercise }) => (
         <div key={exercise.id} className="bg-border rounded-2xl p-4 text-left">
           <button
             onClick={() => onOpen(exercise.id)}
@@ -114,4 +116,3 @@ export const Training = ({ id }: Props) => {
     </div>
   );
 };
-

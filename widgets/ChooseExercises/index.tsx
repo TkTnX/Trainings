@@ -19,9 +19,10 @@ interface ExerciseTypeWithSets extends ExerciseType {
 }
 
 export const ChooseExercises = ({ id }: Props) => {
-  const router = useRouter()
+  const router = useRouter();
   const [exercises, setExercises] = useState<ExerciseTypeWithSets[]>([]);
   const [isPending, setIsPending] = useState(true);
+  const [isPendingSubmit, setIsPendingSubmit] = useState(false);
   const [choosed, setChoosed] = useState<string[]>([]);
 
   useEffect(() => {
@@ -57,11 +58,18 @@ export const ChooseExercises = ({ id }: Props) => {
   };
 
   const onSubmit = async () => {
-    await updateTraining(id, {
-      exercises: choosed
-    })
-    router.push(`/training?id=${id}&step=3`)
-  }
+    try {
+      setIsPendingSubmit(true);
+      await updateTraining(id, {
+        exercises: choosed,
+      });
+      router.push(`/training?id=${id}&step=3`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsPendingSubmit(false);
+    }
+  };
 
   return (
     <div>
@@ -87,7 +95,11 @@ export const ChooseExercises = ({ id }: Props) => {
           </div>
         ))
       )}
-      <button onClick={onSubmit} className="mt-5 w-full bg-main rounded-lg py-3 transition active:opacity-80">
+      <button
+        disabled={isPendingSubmit}
+        onClick={onSubmit}
+        className="mt-5 disabled:pointer-events-none disabled:opacity-50 w-full bg-main rounded-lg py-3 transition active:opacity-80"
+      >
         Начать тренировку
       </button>
     </div>

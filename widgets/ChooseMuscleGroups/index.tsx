@@ -12,6 +12,7 @@ interface Props {
 
 export const ChooseMuscleGroups = ({ id }: Props) => {
   const router = useRouter();
+  const [isPending, setIsPending] = useState(false);
   const [selected, setSelected] = useState<MuscleGroups[]>([]);
 
   const onClick = (group: MuscleGroups) => {
@@ -23,10 +24,17 @@ export const ChooseMuscleGroups = ({ id }: Props) => {
   };
 
   const onSubmit = async () => {
-    await updateTraining(id, {
-      muscleGroup: selected,
-    });
-    router.push(`/training?id=${id}&step=2`);
+    try {
+      setIsPending(true);
+      await updateTraining(id, {
+        muscleGroup: selected,
+      });
+      router.push(`/training?id=${id}&step=2`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
@@ -104,8 +112,9 @@ export const ChooseMuscleGroups = ({ id }: Props) => {
         <p className="absolute bottom-4 left-4 font-bold text-4xl">Ноги</p>
       </button>
       <button
+        disabled={isPending}
         onClick={() => onSubmit()}
-        className="mt-5 bg-main rounded-lg py-3 transition active:opacity-80"
+        className={`mt-5 bg-main rounded-lg py-3 transition active:opacity-80 disabled:opacity-50 disabled:pointer-events-none`}
       >
         Далее
       </button>

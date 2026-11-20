@@ -3,6 +3,7 @@ import { Ubuntu } from "next/font/google";
 import "./globals.css";
 import { Header, Navbar } from "@/widgets";
 import { Suspense } from "react";
+import { ToastContainer } from "react-toastify";
 
 const font = Ubuntu({
   variable: "--font-main",
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${font.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col pb-20">
+        <ToastContainer />
         <main>
           <Suspense>
             <Header />

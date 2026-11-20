@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 export const Navbar = () => {
   const pathname = usePathname();
   return (
-    <nav className="fixed bottom-0 flex items-center justify-between container h-20 bg-[#11111d] border-t border-t-border">
+    <nav className="fixed bottom-0 z-20 flex items-center justify-between container h-20 bg-[#11111d] border-t border-t-border">
       {NAV_ITEMS.map((item) => (
         <Link
           key={item.path}

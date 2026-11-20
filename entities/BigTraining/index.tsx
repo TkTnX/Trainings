@@ -1,4 +1,5 @@
 "use client";
+import { Set } from "@/app/generated/prisma/client";
 import { TrainingExercise } from "@/entities/TrainingExercise";
 import { getTraining } from "@/shared/api";
 import { MuscleGroupEnum, TrainingWithExercise } from "@/shared/types";
@@ -12,7 +13,7 @@ interface Props {
 
 export const BigTraining = ({ id }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [training, setTraining] = useState<TrainingWithExercise | null>(null);
+  const [training, setTraining] = useState<TrainingWithExercise & {sets: Set[]} | null>(null);
   useEffect(() => {
     const getTrainingFunc = async () => {
       try {
@@ -51,7 +52,7 @@ export const BigTraining = ({ id }: Props) => {
       <div className="mt-5">
         <h2 className="text-2xl font-semibold">Упражнения</h2>
         <div className="mt-4 flex flex-col gap-3">
-          {training.exercises.map((exercise) => (
+          {training.exercises.map(({exercise}) => (
             <TrainingExercise exercise={exercise} key={exercise.id} />
           ))}
         </div>

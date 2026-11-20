@@ -1,8 +1,10 @@
+"use client";
 import { createSet } from "@/shared/api";
 import { Input } from "@/shared/components";
 import { TrainingWithExercise } from "@/shared/types";
 import { NotepadTextIcon } from "lucide-react";
-import { SubmitEvent } from "react";
+import { SubmitEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 interface Props {
   exerciseId: string;
@@ -13,10 +15,12 @@ interface Props {
 }
 
 export const AddSetForm = ({ exerciseId, training, setTraining }: Props) => {
+  const [isPending, setIsPending] = useState(false);
   const onSubmitRep = async (e: SubmitEvent<HTMLFormElement>) => {
     if (!training) return null;
     e.preventDefault();
     try {
+      setIsPending(true);
       const formData = new FormData(e.target);
       const set = await createSet({
         ...Object.fromEntries(formData),
@@ -31,18 +35,21 @@ export const AddSetForm = ({ exerciseId, training, setTraining }: Props) => {
 
         return {
           ...prev,
-          exercises: prev.exercises.map((exercise) =>
-            exercise.id === formData.get("exerciseId")
+          exercises: prev.exercises.map((item) =>
+            item.exercise.id === formData.get("exerciseId")
               ? {
-                  ...exercise,
-                  sets: [...exercise.sets, set],
+                  ...item,
+                  sets: [...item.exercise.sets, set],
                 }
-              : exercise,
+              : item,
           ),
         };
       });
     } catch (error) {
       console.log(error);
+      toast.error(`Ошибка: ${error}`);
+    } finally {
+      setIsPending(false);
     }
   };
   return (
@@ -95,7 +102,8 @@ export const AddSetForm = ({ exerciseId, training, setTraining }: Props) => {
       </label>
       <button
         type="submit"
-        className="mt-5 w-full bg-main rounded-lg py-3 transition active:opacity-80"
+        disabled={isPending}
+        className="mt-5 w-full disabled:pointer-events-none disabled:opacity-50 bg-main rounded-lg py-3 transition active:opacity-80"
       >
         Добавить подход
       </button>

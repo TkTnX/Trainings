@@ -5,7 +5,7 @@ import { IUpdateTraining } from "@/shared/types";
 
 export const getTrainings = async () => {
   const trainings = await prisma.training.findMany({
-    include: { exercises: { include: { sets: true } }, sets: true },
+    include: { exercises: { include: { exercise: {include: {sets:true}} } }, sets: true },
     orderBy: {
       createdAt: "desc",
     },
@@ -18,19 +18,20 @@ export const getTraining = async (id: string) => {
   const training = await prisma.training.findUnique({
     where: { id },
     include: {
+      sets: true,
       exercises: {
+        orderBy: {
+          position: "asc",
+        },
         include: {
-          sets: {
-            where: {
-              trainingId: id,
-            },
-            orderBy: {
-              createdAt: "asc",
+          exercise: {
+            include: {
+              sets: true,
             },
           },
         },
+        
       },
-      sets: true,
     },
   });
   if (!training) throw new Error("Тренировка не найдена!");
@@ -43,7 +44,7 @@ export const getLastTraining = async () => {
       createdAt: "desc",
     },
     include: {
-      exercises: { include: { sets: true } },
+      exercises: {  include: { exercise: {include: {sets: true}} } },
       sets: true,
     },
   });
@@ -79,14 +80,29 @@ export const updateTraining = async (id: string, data: IUpdateTraining) => {
     throw new Error("Тренировка не найдена!");
   }
 
-  return await prisma.training.update({
-    where: { id },
-    data: {
-      muscleGroup: data.muscleGroup || training.muscleGroup,
-      exercises: {
-        connect: data.exercises?.map((id) => ({ id })),
+  return await prisma.$transaction(async (tx) => {
+    if (data.exercises) {
+      await tx.trainingExercise.deleteMany({
+        where: {
+          trainingId: id,
+        },
+      });
+
+      await tx.trainingExercise.createMany({
+        data: data.exercises.map((exerciseId, index) => ({
+          trainingId: id,
+          exerciseId,
+          position: index,
+        })),
+      });
+    }
+
+    return tx.training.update({
+      where: { id },
+      data: {
+        muscleGroup: data.muscleGroup ?? training.muscleGroup,
       },
-    },
+    });
   });
 };
 

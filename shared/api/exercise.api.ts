@@ -60,7 +60,6 @@ export async function createExercise(formData: FormData) {
     imageUrl = data.secure_url;
   }
 
-  console.log(image);
   const exercise = await prisma.exercise.create({
     data: {
       name: name as string,
