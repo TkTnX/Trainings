@@ -3,7 +3,7 @@ import { TrainingWithExercise } from "@/shared/types";
 import { BicepsFlexed, Clock, Dumbbell } from "lucide-react";
 
 interface Props {
-  training: TrainingWithExercise & {sets: Set[]};
+  training: TrainingWithExercise ;
 }
 
 export const TrainingInfo = ({ training }: Props) => {

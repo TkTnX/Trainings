@@ -25,7 +25,7 @@ export async function getLastTrainingSets(
         {
           exercises: {
             some: {
-              id: exerciseId,
+              exerciseId,
             },
           },
         },
@@ -41,7 +41,7 @@ export async function getLastTrainingSets(
     },
   });
 
-  if (!lastTraining) return null
+  if (!lastTraining) return null;
 
   const sets = await prisma.set.findMany({
     where: {

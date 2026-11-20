@@ -4,6 +4,8 @@ import { getTrainings } from "@/shared/api";
 import { TrainingWithExercise } from "@/shared/types";
 import { useEffect, useState } from "react";
 
+
+
 export const HistoryTrainings = () => {
   const [trainings, setTrainings] = useState<TrainingWithExercise[]>([]);
   const [isPending, setIsPending] = useState(true);

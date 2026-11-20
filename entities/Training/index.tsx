@@ -5,7 +5,7 @@ import Link from "next/link";
 
 interface Props {
   isLastTraining?: boolean;
-  training: TrainingWithExercise;
+  training: TrainingWithExercise ;
 }
 
 export const Training = ({ isLastTraining = false, training }: Props) => {

@@ -13,7 +13,7 @@ interface Props {
 
 export const BigTraining = ({ id }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [training, setTraining] = useState<TrainingWithExercise & {sets: Set[]} | null>(null);
+  const [training, setTraining] = useState<TrainingWithExercise  | null>(null);
   useEffect(() => {
     const getTrainingFunc = async () => {
       try {
