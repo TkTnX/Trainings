@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Мои тренировки
 
-## Getting Started
+Личный дневник силовых тренировок. Можно завести упражнение, начать тренировку, записать подходы и смотреть, как растут веса и посещаемость.
 
-First, run the development server:
+Интерфейс на русском. Данные хранятся в PostgreSQL, картинки упражнений — в Cloudinary.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Возможности
+
+- Старт тренировки с главной: выбор групп мышц, затем упражнений из каталога.
+- Запись подходов: вес, повторения, заметка и отдых. Подход можно удалить.
+- Сравнение с подходами того же упражнения с прошлой тренировки.
+- Завершение тренировки: длительность считается от момента создания до нажатия «завершить» и сохраняется в минутах.
+- Календарь дней, в которые были тренировки.
+- История тренировок и карточка отдельной тренировки.
+- Каталог упражнений по группам мышц: грудь, спина, ноги, плечи, бицепс, трицепс.
+- Карточка упражнения: график весов и повторений, последний результат, рекорд и динамика максимального веса за последние 30 дней относительно предыдущих 30.
+- Загрузка фото упражнения в Cloudinary.
+
+## Стек
+
+| Слой | Технологии |
+| --- | --- |
+| Фреймворк | [Next.js 16](https://nextjs.org) (App Router), React 19 |
+| Язык | TypeScript |
+| Стили | Tailwind CSS 4, `tw-animate-css` |
+| Шрифт | Ubuntu через `next/font` |
+| Иконки | lucide-react |
+| Данные | PostgreSQL, Prisma 7 (`@prisma/adapter-pg`, драйвер `pg`) |
+| Графики | Chart.js и react-chartjs-2 |
+| Календарь | react-day-picker (локаль `ru`) |
+| Картинки | Cloudinary (загрузка с клиента через upload preset), `next/image` |
+| Сборка | Turbopack в dev и для CSS |
+
+Серверные действия лежат в `shared/api` (`"use server"`). Отдельного REST-слоя нет: страницы и клиентские виджеты вызывают эти функции напрямую.
+
+## Структура
+
+Проект разложен по слоям, близким к Feature-Sliced Design. Алиас `@/*` указывает на корень репозитория.
+
+```
+app/            маршруты, layout, глобальные стили, сгенерированный Prisma Client
+widgets/        крупные блоки экрана (шапка, навигация, тренировка, прогресс)
+features/       действия пользователя (старт, подход, удаление подхода, завершение)
+entities/       карточки тренировки, упражнения и подхода
+shared/         API, типы, константы, хелперы, общие инпуты
+prisma/         схема и клиент
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Клиент Prisma создаётся в `prisma/prisma.client.ts` и в development переиспользуется через `globalThis`, чтобы горячая перезагрузка не плодила соединения.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Модель данных
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Три сущности в `prisma/schema.prisma`:
 
-## Learn More
+- **Training** — тренировка: группы мышц, длительность в минутах, связанные упражнения и подходы.
+- **Exercise** — упражнение: название, группа мышц, необязательное изображение. Одно упражнение может входить в несколько тренировок.
+- **Set** — подход: килограммы, повторения, заметка, отдых, флаги `isIncrease` и `isBest`. Привязан к упражнению и тренировке.
 
-To learn more about Next.js, take a look at the following resources:
+Группы мышц: `BREAST`, `BACK`, `LEGS`, `SHOULDERS`, `BICEPS`, `TRICEPS`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Страницы
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Маршрут | Что на экране |
+| --- | --- |
+| `/` | Кнопка старта, последняя тренировка, календарь посещений |
+| `/training?id=&step=` | Шаг 1 — группы мышц, шаг 2 — упражнения, дальше — сама тренировка и подходы |
+| `/training/[id]` | Карточка прошедшей тренировки |
+| `/progress` | Упражнения по группам мышц и ссылка на создание |
+| `/progress/[id]` | График, рекорд и динамика одного упражнения |
+| `/history` | Календарь и список тренировок |
+| `/create-exercise` | Форма нового упражнения |
 
-## Deploy on Vercel
+Нижняя навигация: главная, прогресс, история. Заголовок страницы берётся из `shared/constants/paths.constants.ts`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Переменные окружения
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Создайте `.env` в корне:
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB?schema=public"
+DIRECT_URL="postgresql://USER:PASSWORD@HOST:5432/DB?schema=public"
+
+NEXT_PUBLIC_CLOUDINARY_URL="https://api.cloudinary.com/v1_1/<cloud_name>/image/upload"
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET="<unsigned_upload_preset>"
+```
+
+- `DATABASE_URL` — строка подключения приложения (Prisma + `pg`).
+- `DIRECT_URL` — прямое подключение для Prisma CLI (`prisma7.config.ts`: миграции и generate). На обычном Postgres часто совпадает с `DATABASE_URL`. Если база за пулером (например, PgBouncer или Neon pooler), сюда кладут прямое соединение без пулера.
+- `NEXT_PUBLIC_CLOUDINARY_URL` и `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` нужны, чтобы форма упражнения могла загрузить картинку. Без них создание упражнения с файлом упадёт.
+
+Файл `.env` не коммитьте.
+
+## Запуск
+
+Нужны Node.js и PostgreSQL.
+
+```bash
+npm install
+npx prisma generate
+npx prisma migrate dev
+npm run dev
+```
+
+Приложение откроется на [http://localhost:3000](http://localhost:3000).
+
+`prisma generate` пишет клиент в `app/generated/prisma`. Каталог генерируется, в репозиторий его класть не нужно. Скрипт `build` вызывает generate сам.
+
+Если миграций ещё нет, `migrate dev` создаст первую по `prisma/schema.prisma`.
+
+## Скрипты
+
+| Команда | Действие |
+| --- | --- |
+| `npm run dev` | Dev-сервер Next.js |
+| `npm run build` | `prisma generate` и production-сборка |
+| `npm run start` | Запуск собранного приложения |
+| `npm run lint` | ESLint (`eslint-config-next`) |
+
+## Деплой
+
+Сборка — обычный Next.js (`next build` / `next start`). На хостинге задайте те же переменные окружения и выполните миграции против боевой базы (`npx prisma migrate deploy`) до или вместе с выкладкой.
+
+`next.config.ts` разрешает картинки с `res.cloudinary.com` и включает `cacheComponents` и `partialPrefetching`.
